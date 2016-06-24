@@ -10,15 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".view.MainActivity">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/SystolLab"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:editable="false"
-        android:text="Systolic"/>
+        android:text="Systolic"
+        android:focusable="false"
+        android:clickable="false"
+        android:inputType="none"
+        android:layout_alignBottom="@+id/systolicVal"
+        android:layout_alignRight="@+id/DiastolLab"
+        android:layout_alignEnd="@+id/DiastolLab"
+        android:textSize="18sp"/>
 
     <EditText
         android:layout_width="fill_parent"
@@ -29,33 +35,21 @@
         android:clickable="true"
         android:enabled="true"
         android:maxLength="10"
-        android:layout_below="@+id/SystolLab"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/SystolLab"
+        android:layout_alignLeft="@+id/DiastolVal"
+        android:layout_alignStart="@+id/DiastolVal"/>
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/DiastolLab"
         android:text="Diastolic"
-        android:editable="false"
         android:layout_below="@+id/systolicVal"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/HeartrateLab"
-        android:text="Heart Rate"
-        android:editable="true"
-        android:inputType="number"
-        android:clickable="true"
-        android:enabled="true"
-        android:maxLength="10"
-        android:layout_below="@+id/DiastolVal"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:textSize="18sp"
+        android:layout_above="@+id/HeartrateLab"/>
 
     <EditText
         android:layout_width="fill_parent"
@@ -63,9 +57,25 @@
         android:id="@+id/DiastolVal"
         android:editable="false"
         android:inputType="number"
-        android:layout_below="@+id/DiastolLab"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_below="@+id/systolicVal"
+        android:layout_alignRight="@+id/heartRateVal"
+        android:layout_alignEnd="@+id/heartRateVal"
+        android:layout_toRightOf="@+id/HeartrateLab"
+        android:layout_toEndOf="@+id/HeartrateLab"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/HeartrateLab"
+        android:text="Heart Rate"
+        android:editable="true"
+        android:inputType="number|none"
+        android:maxLength="10"
+        android:layout_below="@+id/DiastolVal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="18sp"
+        android:layout_alignBottom="@+id/heartRateVal"/>
 
     <EditText
         android:layout_width="fill_parent"
@@ -76,9 +86,11 @@
         android:clickable="true"
         android:enabled="true"
         android:maxLength="10"
-        android:layout_below="@+id/HeartrateLab"
+        android:layout_below="@+id/DiastolVal"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/HeartrateLab"
+        android:layout_toEndOf="@+id/HeartrateLab"/>
 
     <ListView
         android:layout_width="wrap_content"

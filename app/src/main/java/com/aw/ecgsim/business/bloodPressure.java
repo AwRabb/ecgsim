@@ -39,13 +39,17 @@ public class bloodPressure implements Line {
      * Lowest point of blood pressure during a heart beat. baseline level.
      */
     private double diastolic;
+    final private String Tag = "BloodPressure.business";
 
+    /**
+     * accepts the time, and returns the current amplitude of the Line. In this case, the current blood pressure.
+     * @param time time
+     * @return blood pressure rating (in mmhg/Torr I believe)
+     */
     private int Amplitude(int time){
         double amplitude;
 
         double cycleTime = time;
-
-
 
         if (cycleTime > heartRate) {
             cycleTime -= heartRate;
@@ -54,29 +58,71 @@ public class bloodPressure implements Line {
             }
         }
         if (cycleTime > heartRate * 0.75){ cycleTime = heartRate * 0.75;   }
-
-
-
-
         double temp = (cycleTime / (heartRate * 0.75));
 
         amplitude = systolic - (temp * (systolic - diastolic));
-
-        if ((time & 1) == 0) {
-            Log.d("BP cycleTime = ", String.valueOf(cycleTime));
-            Log.d("BP temp = ", String.valueOf(temp));
-            Log.d("BP amplitude = ", String.valueOf(amplitude));
-        }
         return (int)amplitude;
     }
 
 
+    public double getDiastolic() {
+        return diastolic;
+    }
 
+    public double getHeartRate() {
+        return heartRate;
+    }
 
+    public double getSystolic() {
+        return systolic;
+    }
 
+    /**
+     * sets Diastolic Value. must be smaller than systolic, otherwise will be set to default (80), unless systolic <80, than systolic-1. also must be > 0
+     * @param diastolic value to set
+     * @return true if worked set to input value, false otherwise
+     */
+    public boolean setDiastolic(double diastolic) {
+        if (diastolic >= systolic || diastolic == 0){
+            Log.d(Tag ,"diastolic higher than systolic, or diastolic = 0, setting Default diastolic (80)");
+            if (systolic < 80){
+                this.diastolic = systolic - 1;
+                Log.d(Tag, "systolic higher than default, settings to systolic - 1, or " + diastolic);
+                return false;
+            }
+            this.diastolic = 80;
+            return false;
+        }
+        if (diastolic == 0){
+            this.diastolic = 80;
+        }
+        this.diastolic = diastolic;
+        return true;
+    }
 
+    public void setHeartRate(double heartRate) {
+        this.heartRate = heartRate;
+    }
 
-
+    /**
+     * sets systolic Value. must be larger than diastolic, otherwise will be set to default (120), unless diastolic > 120, than diastolic + 1. also must be >0
+     * @param systolic
+     * @return
+     */
+    public boolean setSystolic(double systolic) {
+        if (diastolic >= systolic || systolic == 0){
+            this.systolic = 120;
+            Log.d(Tag ,"diastolic higher than systolic, or systolic = 0, setting Default systolic " + systolic);
+            if (diastolic > 120){
+                this.systolic = diastolic + 1;
+                Log.d(Tag, "systolic higher than default, settings to systolic - 1, or " + systolic);
+                return false;
+            }
+            return false;
+        }
+        this.systolic = systolic;
+        return true;
+    }
 
     @Override
     public int getAmplitude(int time) {
