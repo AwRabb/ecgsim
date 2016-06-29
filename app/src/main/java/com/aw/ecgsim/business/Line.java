@@ -8,7 +8,7 @@ public interface Line {
     /**
      * Accepts the current time of heart beat or respiration and returns appropriate value
      * @param time current time in heart beat cycle
-     * @return amplitude of the line at time
+     * @return amplitude of the line at input time
      */
    public int getAmplitude(int time);
 

@@ -8,7 +8,6 @@ public class heartBeat implements Line {
 
 
 
-
     @Override
     public int getAmplitude(int time) {
         return 0;

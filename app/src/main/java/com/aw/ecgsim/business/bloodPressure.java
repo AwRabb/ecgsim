@@ -3,6 +3,7 @@ package com.aw.ecgsim.business;
 import android.util.Log;
 
 /**
+ * Blood Pressure Line simulation. accepts an input time, and returns the current Blood Pressure (amplitude)
  * Created by Andrew Rabb on 2016-06-22.
  */
 public class bloodPressure implements Line {
@@ -39,11 +40,14 @@ public class bloodPressure implements Line {
      * Lowest point of blood pressure during a heart beat. baseline level.
      */
     private double diastolic;
+    /**
+     * TAG value, for differentiating logs
+     */
     final private String Tag = "BloodPressure.business";
 
     /**
      * accepts the time, and returns the current amplitude of the Line. In this case, the current blood pressure.
-     * @param time time
+     * @param time time parameter
      * @return blood pressure rating (in mmhg/Torr I believe)
      */
     private int Amplitude(int time){
@@ -64,15 +68,26 @@ public class bloodPressure implements Line {
         return (int)amplitude;
     }
 
-
+    /**
+     * returns diastolic value
+     * @return - diastolic
+     */
     public double getDiastolic() {
         return diastolic;
     }
 
+    /**
+     * returns heart Rate value
+     * @return - heart Rate
+     */
     public double getHeartRate() {
         return heartRate;
     }
 
+    /**
+     * returns systolic value
+     * @return - systolic
+     */
     public double getSystolic() {
         return systolic;
     }
@@ -100,14 +115,18 @@ public class bloodPressure implements Line {
         return true;
     }
 
+    /**
+     * sets heart rate to the input value
+     * @param heartRate - heart rate to be input
+     */
     public void setHeartRate(double heartRate) {
         this.heartRate = heartRate;
     }
 
     /**
      * sets systolic Value. must be larger than diastolic, otherwise will be set to default (120), unless diastolic > 120, than diastolic + 1. also must be >0
-     * @param systolic
-     * @return
+     * @param systolic - systolic value to be input
+     * @return true if value input is entered. false if value is set to default or 1 + diastolic
      */
     public boolean setSystolic(double systolic) {
         if (diastolic >= systolic || systolic == 0){
@@ -124,6 +143,11 @@ public class bloodPressure implements Line {
         return true;
     }
 
+    /**
+     * gets the amplitude of the blood Pressure.
+     * @param time current time in heart beat cycle
+     * @return current Blood Pressure
+     */
     @Override
     public int getAmplitude(int time) {
         return Amplitude(time);
