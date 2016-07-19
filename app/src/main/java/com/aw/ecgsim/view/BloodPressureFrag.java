@@ -2,7 +2,6 @@ package com.aw.ecgsim.view;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -10,6 +9,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -24,20 +25,24 @@ import java.util.ArrayList;
 /**
  * Created by Andrew Rabb on 2016-07-10.
  */
-public class BloodPressureFrag extends Fragment {
+public class BloodPressureFrag extends Fragment implements SurfaceHolder.Callback {
     ArrayList<String> results;
     ArrayAdapter adapter;
     ListView listView;
     final String TAG = "View.Main Activity";
     bloodPressure bloodPressure = new bloodPressure();
     View view;
+    DrawView canvas;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    Bitmap bitmap;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bp_fragment_layout, container, false);
         //listView = (ListView) view.findViewById(R.id.resultslist);
         //test();
         setListeners();
-        Drawable();
+        //Drawable();
         return view;
     }
 
@@ -49,7 +54,7 @@ public class BloodPressureFrag extends Fragment {
         for (int i = 0; i < 120; i++) {
             int x = bloodPressure.getAmplitude(i);
             results.add(String.valueOf(x));
-            //Log.d("testing bloodPressure", String.valueOf(x));
+            //Log.d("testing bloodPressure", String.valueOf(bitmap));
         }
         adapter = new ArrayAdapter<>(this.getActivity(), R.layout.listview, results);
         if (!adapter.isEmpty()) {
@@ -60,34 +65,23 @@ public class BloodPressureFrag extends Fragment {
     private Paint paint = new Paint();
 
     private void init(){
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.RED);
         paint.setStrokeWidth(1f);
     }
 
 
     private void Drawable(){
         init();
-//        int width = view.findViewById(R.id.draw_box).getWidth();
-//        int height = view.findViewById(R.id.draw_box).getHeight();
-        int width = 100;
-        int height = 100;
 
-        width = view.getMeasuredWidth();
+        surfaceView = (SurfaceView) view.findViewById(R.id.BloodPressureDrawBox);
 
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
 
-
-
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
-        DrawView drawView = new DrawView();
+        surfaceView.draw(new DrawView(paint));
 
 
 
-
-        Log.d(TAG, "width is :" + width + " - height is :" + height);
-        canvas.drawLine(width/3, height/3, width /2, height /2, paint);
 
     }
 
@@ -150,4 +144,29 @@ public class BloodPressureFrag extends Fragment {
             }
         });
     }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+        bitmap = Bitmap.createBitmap(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height(), Bitmap.Config.ARGB_8888);
+        canvas = new DrawView(bitmap, paint);
+
+        canvas.drawRect(15, 15, 30, 30, paint);
+        surfaceView.draw(canvas);
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas = new DrawView(bitmap, paint);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+    }
+
+
+
 }

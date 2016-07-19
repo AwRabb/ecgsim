@@ -88,11 +88,12 @@
         android:layout_toRightOf="@+id/HeartrateLab"
         android:layout_toEndOf="@+id/HeartrateLab"/>
 
-<View
+<SurfaceView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/draw_box">
-</View>
+    android:id="@+id/BloodPressureDrawBox"
+    android:layout_below="@+id/HeartrateLab">
+</SurfaceView>
 
 
 <!--    commented out for testing reasons
