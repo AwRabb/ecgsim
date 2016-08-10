@@ -77,7 +77,7 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
     private void init(){
         paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(25f);
+        paint.setStrokeWidth(15f);
     }
     @Override
     public void draw(Canvas canvas) {
@@ -87,8 +87,10 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
 
         canvas.drawColor(Color.BLACK);
 
-        canvas.drawLine(0,0,getWidth(), getHeight(), paint);
-        canvas.drawText("hello World", canvas.getWidth(), canvas.getHeight()/2, paint);
+        canvas.drawLine(100,100,getWidth()-100, getHeight()-100, paint);
+
+        paint.setTextSize(50);
+        canvas.drawText("Hello World", 0, canvas.getHeight()/2, paint);
 
 
         }
