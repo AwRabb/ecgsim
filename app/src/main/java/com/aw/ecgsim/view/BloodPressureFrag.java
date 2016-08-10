@@ -1,5 +1,6 @@
 package com.aw.ecgsim.view;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,14 +26,14 @@ import java.util.ArrayList;
 /**
  * Created by Andrew Rabb on 2016-07-10.
  */
-public class BloodPressureFrag extends Fragment implements SurfaceHolder.Callback {
+public class BloodPressureFrag extends Fragment {
     ArrayList<String> results;
     ArrayAdapter adapter;
     ListView listView;
     final String TAG = "View.Main Activity";
     bloodPressure bloodPressure = new bloodPressure();
     View view;
-    DrawView canvas;
+    BPPanel canvas;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
     Bitmap bitmap;
@@ -42,6 +43,7 @@ public class BloodPressureFrag extends Fragment implements SurfaceHolder.Callbac
         //listView = (ListView) view.findViewById(R.id.resultslist);
         //test();
         setListeners();
+        testPanel();
         //Drawable();
         return view;
     }
@@ -64,26 +66,25 @@ public class BloodPressureFrag extends Fragment implements SurfaceHolder.Callbac
 
     private Paint paint = new Paint();
 
-    private void init(){
-        paint.setColor(Color.RED);
-        paint.setStrokeWidth(1f);
-    }
-
-
-    private void Drawable(){
-        init();
-
-        surfaceView = (SurfaceView) view.findViewById(R.id.BloodPressureDrawBox);
-
-        surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(this);
-
-        surfaceView.draw(new DrawView(paint));
 
 
 
+    private BPPanel bpPanel;
+
+    private void testPanel(){
+
+
+
+        //bpPanel = new BPPanel(this.getActivity(), bitmap, surfaceHolder);
+
+        //bitmap = Bitmap.createBitmap(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height(), Bitmap.Config.ARGB_8888);
 
     }
+
+
+
+
+
 
     private void setListeners() {
         final boolean testing = false;
@@ -144,29 +145,4 @@ public class BloodPressureFrag extends Fragment implements SurfaceHolder.Callbac
             }
         });
     }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-
-        bitmap = Bitmap.createBitmap(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height(), Bitmap.Config.ARGB_8888);
-        canvas = new DrawView(bitmap, paint);
-
-        canvas.drawRect(15, 15, 30, 30, paint);
-        surfaceView.draw(canvas);
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        canvas = new DrawView(bitmap, paint);
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-
-    }
-
-
-
 }

@@ -88,12 +88,12 @@
         android:layout_toRightOf="@+id/HeartrateLab"
         android:layout_toEndOf="@+id/HeartrateLab"/>
 
-<SurfaceView
+<com.aw.ecgsim.view.BPPanel
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/BloodPressureDrawBox"
     android:layout_below="@+id/HeartrateLab">
-</SurfaceView>
+</com.aw.ecgsim.view.BPPanel>
 
 
 <!--    commented out for testing reasons
