@@ -1,17 +1,11 @@
 package com.aw.ecgsim.view;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -19,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.aw.ecgsim.R;
-import com.aw.ecgsim.business.bloodPressure;
+import com.aw.ecgsim.business.BloodPressure;
 
 import java.util.ArrayList;
 
@@ -27,64 +21,40 @@ import java.util.ArrayList;
  * Created by Andrew Rabb on 2016-07-10.
  */
 public class BloodPressureFrag extends Fragment {
-    ArrayList<String> results;
     ArrayAdapter adapter;
     ListView listView;
     final String TAG = "View.Main Activity";
-    bloodPressure bloodPressure = new bloodPressure();
+    BloodPressure bloodPressure = new BloodPressure();
     View view;
-    BPPanel canvas;
-    SurfaceView surfaceView;
-    SurfaceHolder surfaceHolder;
-    Bitmap bitmap;
+    BPPanel bpPanel;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bp_fragment_layout, container, false);
         //listView = (ListView) view.findViewById(R.id.resultslist);
         //test();
         setListeners();
-        testPanel();
-        //Drawable();
+
+        bpPanel = (BPPanel) view.findViewById(R.id.BloodPressureDrawBox);
+        bpPanel.setBloodPressure(bloodPressure);
         return view;
     }
+
 
     /**
      * Displays the amplitude as a series of numbers in an array adapter, for easier debugging
      */
     private void test() {
-        results = new ArrayList<>();
+        ArrayList<String> results = new ArrayList<>();
         for (int i = 0; i < 120; i++) {
             int x = bloodPressure.getAmplitude(i);
             results.add(String.valueOf(x));
-            //Log.d("testing bloodPressure", String.valueOf(bitmap));
+            //Log.d("testing BloodPressure", String.valueOf(bitmap));
         }
         adapter = new ArrayAdapter<>(this.getActivity(), R.layout.listview, results);
         if (!adapter.isEmpty()) {
             listView.setAdapter(adapter);
         }
     }
-
-    private Paint paint = new Paint();
-
-
-
-
-    private BPPanel bpPanel;
-
-    private void testPanel(){
-
-
-
-        //bpPanel = new BPPanel(this.getActivity(), bitmap, surfaceHolder);
-
-        //bitmap = Bitmap.createBitmap(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height(), Bitmap.Config.ARGB_8888);
-
-    }
-
-
-
-
-
 
     private void setListeners() {
         final boolean testing = false;
@@ -108,6 +78,7 @@ public class BloodPressureFrag extends Fragment {
                     bloodPressure.setSystolic(80);
                 }
                 if (testing) test();
+                bpPanel.setBloodPressure(bloodPressure);
             }
         });
         diastolicEdit.addTextChangedListener(new TextWatcher() {
@@ -124,8 +95,10 @@ public class BloodPressureFrag extends Fragment {
 
                 } catch (NumberFormatException e) {
                     bloodPressure.setDiastolic(80);
+                    bpPanel.setBloodPressure(bloodPressure);
                 }
                 if (testing) test();
+                bpPanel.setBloodPressure(bloodPressure);
             }
         });
         heartRate.addTextChangedListener(new TextWatcher() {
@@ -140,8 +113,10 @@ public class BloodPressureFrag extends Fragment {
 
                 } catch (NumberFormatException e) {
                     bloodPressure.setHeartRate(80);
+                    bpPanel.setBloodPressure(bloodPressure);
                 }
                 if (testing) test();
+                bpPanel.setBloodPressure(bloodPressure);
             }
         });
     }

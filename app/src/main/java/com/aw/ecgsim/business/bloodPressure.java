@@ -6,12 +6,12 @@ import android.util.Log;
  * Blood Pressure Line simulation. accepts an input time, and returns the current Blood Pressure (amplitude)
  * Created by Andrew Rabb on 2016-06-22.
  */
-public class bloodPressure implements Line {
+public class BloodPressure implements Line {
 
     /**
      * default constructor
      */
-    public bloodPressure(){
+    public BloodPressure(){
         systolic = 120;
         diastolic = 80;
         heartRate = 45;
@@ -23,7 +23,7 @@ public class bloodPressure implements Line {
      * @param systolic - highest blood pressure
      * @param diastolic - lowest blood pressure
      */
-    public bloodPressure(int heartRate, int systolic, int diastolic){
+    public BloodPressure(int heartRate, int systolic, int diastolic){
         this.systolic = systolic;
         this.diastolic = diastolic;
         this.heartRate = heartRate;

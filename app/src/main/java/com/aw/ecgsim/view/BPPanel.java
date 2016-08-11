@@ -1,8 +1,6 @@
 package com.aw.ecgsim.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,7 +9,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.aw.ecgsim.R;
+import com.aw.ecgsim.business.BloodPressure;
 import com.aw.ecgsim.business.DrawThread;
 
 /**
@@ -20,7 +18,15 @@ import com.aw.ecgsim.business.DrawThread;
 public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
     Context context;
     DrawThread drawThread;
-    Boolean b = true;
+    BloodPressure bloodPressure;
+    private Paint paint;
+    private final int dScreenWidth = 120;
+    private final int dScreenHeight = 200;
+
+    public void setBloodPressure(BloodPressure bloodPressure) {
+        this.bloodPressure = bloodPressure;
+    }
+
 
     public BPPanel(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -64,37 +70,99 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
                 Log.d("business.BPPanel",  ex.getMessage());
             }
         }
-
-
     }
- int i = 0;
-    public void doDraw(Canvas canvas){
-        //canvas.drawColor(Color.BLACK);
-        //canvas.drawLine(0,0, canvas.getWidth(), canvas.getHeight(), new Paint(Color.WHITE));
-    }
-
-
-    private Paint paint;
     private void init(){
         paint = new Paint();
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.RED);
         paint.setStrokeWidth(15f);
     }
+    int counter = 0;
+    int top;
+    int bot;
+    int left;
+    int right;
+    int width;
+    int height;
+    int refreshLine;
+    int widthTick;
+    int heightTick;
+    int baseHeight;
+    float[] lineList = new float[0];
+
+
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
         init();
 
-
-//        canvas.drawColor(Color.BLACK);
-        paint.setColor(b?Color.BLUE: Color.GREEN);
-if(b) canvas.drawLine(100, 100, getWidth() - 100, getHeight() - 100, paint);
-else canvas.drawLine(100, getHeight() - 100, getWidth() - 100, 100,  paint);
-        b=!b;
-        
-        paint.setTextSize(50);
-        canvas.drawText("Hello World", 0, canvas.getHeight()/2, paint);
-
-
+        counter++;
+        if (counter > dScreenWidth){
+            counter = 0;
+            lineList = new float[0];
         }
+        top = 0;
+        bot = canvas.getHeight();
+        left = 0;
+        right = canvas.getWidth();
+
+        refreshLine = 0;
+        baseHeight = (int) (height*3/4);
+        width = getWidth();
+        widthTick = width / dScreenWidth;
+        heightTick = height / dScreenHeight;
+        height = getHeight();
+
+
+        //canvas.drawLine(top, left, right, bot, paint);
+
+        //canvas.drawLine(0, right /2, widthTick*counter, right/2, paint);
+
+        VerticalBars(canvas);
+
+
+
+
+    }
+
+    /**
+     * One possible way of drawing at least the BP graph. This one is based upon making a series of vertical lines.
+     * each line goes from the base Height to the top. It should be adjusted such that the skew is not so extreme
+     * @param canvas - canvas to draw on, supplied by surfaceholder
+     */
+    private void VerticalBars(Canvas canvas){
+
+        int amplitude = bloodPressure.getAmplitude(counter);
+        float[] inputFloats = {counter * widthTick, baseHeight, counter * widthTick,(baseHeight +  (float) bloodPressure.getDiastolic()) - (amplitude * heightTick)};
+        createLineList(inputFloats);
+        canvas.drawLines(lineList, paint);
+    }
+    /**
+     *
+     * @param inputFloats
+     */
+    private void createLineList(float[] inputFloats) {
+        float[] tempArray = new float[lineList.length + inputFloats.length];
+        int index = lineList.length;
+        for (int i = 0; i < lineList.length; i++){
+            tempArray[i] = lineList[i];
+        }
+        for (int i = 0; i < inputFloats.length; i++){
+            tempArray[i + index] = inputFloats[i];
+        }
+        lineList = tempArray;
+    }
 }
+
+
+//sx, sy, ex, ey
+
+/*
+
+oxxxxxxxxx
+y-amplitude
+y
+y
+y-baseHeight
+y
+ */

@@ -14,7 +14,6 @@ import com.aw.ecgsim.view.BPPanel;
 public class DrawThread extends Thread {
 
     boolean running;
-    Canvas canvas;
     SurfaceHolder holder;
     Context context;
     BPPanel surfaceView;
@@ -35,14 +34,13 @@ public class DrawThread extends Thread {
         while (running){
             Canvas canvas = holder.lockCanvas();
             if(canvas != null){
-                //surfaceView.doDraw(canvas);
                 surfaceView.draw(canvas);
 
-                Log.d("DrawThread - Drawing", "dakjhdskljfhadsfkjahdskjhf drawing");
+                //Log.d("DrawThread - Drawing", "currently drawing to screen (every 5s currently)");
 
                 holder.unlockCanvasAndPost(canvas);
                 try {
-                    sleep(10000);
+                    sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
