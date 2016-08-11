@@ -20,6 +20,7 @@ import com.aw.ecgsim.business.DrawThread;
 public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
     Context context;
     DrawThread drawThread;
+    Boolean b = true;
 
     public BPPanel(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -85,10 +86,12 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
         init();
 
 
-        canvas.drawColor(Color.BLACK);
-
-        canvas.drawLine(100,100,getWidth()-100, getHeight()-100, paint);
-
+//        canvas.drawColor(Color.BLACK);
+        paint.setColor(b?Color.BLUE: Color.GREEN);
+if(b) canvas.drawLine(100, 100, getWidth() - 100, getHeight() - 100, paint);
+else canvas.drawLine(100, getHeight() - 100, getWidth() - 100, 100,  paint);
+        b=!b;
+        
         paint.setTextSize(50);
         canvas.drawText("Hello World", 0, canvas.getHeight()/2, paint);
 
