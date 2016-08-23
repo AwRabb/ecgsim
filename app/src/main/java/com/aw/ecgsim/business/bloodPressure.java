@@ -44,7 +44,10 @@ public class BloodPressure implements Line {
      * TAG value, for differentiating logs
      */
     final private String Tag = "BloodPressure.business";
-
+/*
+HeartRate is currently backwards. it should be a frequency,
+however it is currently running as an absolute value. this will need to be flipped.
+ */
     /**
      * accepts the time, and returns the current amplitude of the Line. In this case, the current blood pressure.
      * @param time time parameter
@@ -55,13 +58,12 @@ public class BloodPressure implements Line {
 
         double cycleTime = time;
 
-        if (cycleTime > heartRate) {
+        while (cycleTime > heartRate){
             cycleTime -= heartRate;
-            if (cycleTime > heartRate) {
-                cycleTime -= heartRate;
-            }
         }
-        if (cycleTime > heartRate * 0.75){ cycleTime = heartRate * 0.75;   }
+        if (cycleTime > heartRate * 0.75){ cycleTime = (heartRate * 0.75);   }
+
+
         double temp = (cycleTime / (heartRate * 0.75));
 
         amplitude = systolic - (temp * (systolic - diastolic));

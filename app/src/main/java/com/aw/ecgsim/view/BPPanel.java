@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 
 import com.aw.ecgsim.business.BloodPressure;
 import com.aw.ecgsim.business.DrawThread;
+import com.aw.ecgsim.business.LineColl;
 
 /**
  * Created by Andrew Rabb on 2016-07-10.
@@ -21,7 +22,7 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
     BloodPressure bloodPressure;
     private Paint paint;
     private final int dScreenWidth = 120;
-    private final int dScreenHeight = 200;
+    private final int dScreenHeight = 140;
 
     public void setBloodPressure(BloodPressure bloodPressure) {
         this.bloodPressure = bloodPressure;
@@ -39,14 +40,6 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-//        Canvas c = getHolder().lockCanvas();
-//        draw(c);
-//        //doDraw(c);
-//        getHolder().unlockCanvasAndPost(c);
-
-
-
         drawThread = new DrawThread(holder, context, this);
         drawThread.setRunning(true);
         drawThread.start();
@@ -88,54 +81,79 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
     int heightTick;
     int baseHeight;
     float[] lineList = new float[0];
-
-
+    LineColl lineColl = new LineColl();
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
         init();
 
-        counter++;
         if (counter > dScreenWidth){
             counter = 0;
-            lineList = new float[0];
+            lineColl = new LineColl();
+        }
+        else {
+            counter++;
         }
         top = 0;
-        bot = canvas.getHeight();
+        bot = canvas.getHeight() / 2;
         left = 0;
         right = canvas.getWidth();
 
         refreshLine = 0;
-        baseHeight = (int) (height*3/4);
+        baseHeight = height*3/4;
         width = getWidth();
         widthTick = width / dScreenWidth;
         heightTick = height / dScreenHeight;
         height = getHeight();
-
-
-        //canvas.drawLine(top, left, right, bot, paint);
-
-        //canvas.drawLine(0, right /2, widthTick*counter, right/2, paint);
-
-        VerticalBars(canvas);
-
-
-
-
+        testingLineColl(canvas);
     }
 
+    private void LineGraph(Canvas canvas ){
+        int amplitude = bloodPressure.getAmplitude(counter);
+        float[] inputFloats = new float[0];
+
+        if (lineList.length == 0){
+            inputFloats = new float[]{0, baseHeight, counter * widthTick, amplitude * heightTick};
+        }
+        else{
+            inputFloats[0] = lineList[lineList.length-2];
+            inputFloats[1] = lineList[lineList.length-1];
+        }
+        createLineList(inputFloats);
+        canvas.drawLines(lineList, paint);
+    }
+
+    private void testingLineColl(Canvas canvas){
+        int amplitude = bloodPressure.getAmplitude(counter);
+
+        //LineColl lineColl = new LineColl();
+        lineColl.AddPoint(counter * widthTick,
+                (int) (bot - (amplitude * heightTick) + (bloodPressure.getDiastolic() * heightTick)));
+        amplitude = bloodPressure.getAmplitude(counter + 1);
+        lineColl.AddPoint((counter + 1) * widthTick,
+                (int) (bot - (amplitude * heightTick) + (bloodPressure.getDiastolic() * heightTick)));
+
+//        canvas.drawLine(0,
+//                (float) (bot - (bloodPressure.getSystolic() * heightTick)), width,
+//                (float) (bot - (bloodPressure.getSystolic() * heightTick)), paint);
+        canvas.drawLines(lineColl.SplitList(), paint);
+    }
     /**
      * One possible way of drawing at least the BP graph. This one is based upon making a series of vertical lines.
      * each line goes from the base Height to the top. It should be adjusted such that the skew is not so extreme
-     * @param canvas - canvas to draw on, supplied by surfaceholder
+     * @param canvas - canvas to draw on, supplied by surfaceHolder
      */
     private void VerticalBars(Canvas canvas){
 
         int amplitude = bloodPressure.getAmplitude(counter);
-        float[] inputFloats = {counter * widthTick, baseHeight, counter * widthTick,(baseHeight +  (float) bloodPressure.getDiastolic()) - (amplitude * heightTick)};
-        createLineList(inputFloats);
-        canvas.drawLines(lineList, paint);
+        lineColl.AddPoint(counter * widthTick, baseHeight-10);
+        lineColl.AddPoint((float) (counter * widthTick),
+                (float) (baseHeight - 5 + (bloodPressure.getDiastolic() * heightTick) - (amplitude * heightTick)));
+        //float[] inputFloats = {counter * widthTick, baseHeight, counter * widthTick,(baseHeight +  (float) bloodPressure.getDiastolic()) - (amplitude * heightTick)};
+        //createLineList(inputFloats);
+
+        canvas.drawLines(lineColl.SplitList(), paint);
     }
     /**
      *
@@ -153,12 +171,8 @@ public class BPPanel extends SurfaceView implements SurfaceHolder.Callback{
         lineList = tempArray;
     }
 }
-
-
 //sx, sy, ex, ey
-
 /*
-
 oxxxxxxxxx
 y-amplitude
 y
